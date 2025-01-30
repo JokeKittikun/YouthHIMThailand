@@ -1,0 +1,225 @@
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="icon" href="logo.png" type="image/x-icon">
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Sarabun:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap"
+        rel="stylesheet" />
+
+
+    <title>Youth HIM Thailand</title>
+
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: 0;
+            overflow: hidden;
+            font-family: Inter;
+        }
+
+        #map {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+        .link {
+            position: fixed;
+            bottom: 30px;
+            right: 20px;
+            z-index: 100;
+            width: 50px;
+            height: 50px;
+            border: 1px solid rgb(221, 221, 221);
+            border-radius: 100%;
+            padding: 10px;
+            background-color: rgb(235, 235, 235);
+        }
+        .link:hover {
+            background-color: rgb(195, 221, 193);
+        }
+        .img-sheet {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+        }
+        .loading {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+
+
+
+
+    <script src="https://code.highcharts.com/maps/highmaps.js"></script>
+    <script src="https://code.highcharts.com/modules/annotations.js"></script>
+    <script src="https://code.highcharts.com/maps/modules/data.js"></script>
+    <script src="https://code.highcharts.com/maps/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/maps/modules/offline-exporting.js"></script>
+    <script src="https://code.highcharts.com/maps/modules/accessibility.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.7.1.js" crossorigin="anonymous"></script> -->
+
+
+
+    <a class="link" target="_blank" href="https://docs.google.com/spreadsheets/d/1USqKWOli5wi6k3S3r8XeaA8ot2i62tc5xSmYObVtHJQ/edit?usp=sharing"><img class="img-sheet" src="https://upload.wikimedia.org/wikipedia/commons/3/30/Google_Sheets_logo_%282014-2020%29.svg"/></a>
+
+    <div id="map">
+        <div class="loading">
+            Loading data from Google Spreadsheets...
+        </div>
+    </div>
+    
+
+
+
+    <script>
+
+        const url = "https://docs.google.com/spreadsheets/d/1USqKWOli5wi6k3S3r8XeaA8ot2i62tc5xSmYObVtHJQ/gviz/tq?";
+
+        fetch(url)
+            .then(res => res.text())
+            .then(data => {
+                const temp = data.substr(47).slice(0, -2);
+                const json = JSON.parse(temp);
+                const json_data = json.table.rows;
+                const result = [];
+                for (var i in json_data) {
+                    if (cellValue1 = json_data[i].c[0] == null) {
+                        cellValue1 = "";
+                    } else {
+                        cellValue1 = json_data[i].c[0].v;
+
+                    }
+                    result.push([cellValue1, json_data[i].c[4].v]);
+                }
+
+
+
+                (async () => {
+
+                    const topology = await fetch(
+                        'https://code.highcharts.com/mapdata/countries/th/th-all.topo.json'
+                    ).then(response => response.json());
+
+                    // Instantiate the map
+                    Highcharts.mapChart('map', {
+                        chart: {
+                            map: topology
+                        },
+
+                        title: {
+                            text: 'Youth HIM Thailand',
+                            align: 'center',
+                            style: {
+                                fontSize: '32px'
+                            }
+                        },
+
+                        subtitle: {
+                            text: 'By Province',
+                            align: 'center',
+                            style: {
+                                fontSize: '20px'
+                            }
+                        },
+
+                        accessibility: {
+                            typeDescription: 'Map of Thailand.',
+                            point: {
+                                describeNull: false
+                            }
+                        },
+
+                        legend: {
+                            enabled: false
+                        },
+
+                        mapNavigation: {
+                            enabled: true,
+                            enableDoubleClickZoomTo: true,
+                            buttonOptions: {
+                                verticalAlign: 'top',
+                                align: 'right'
+                            }
+                        },
+                        colorAxis: {
+                            dataClasses: [{
+                                from: 0,
+                                to: 0,
+                                color: 'lightgray',
+                                name: "0"
+                            }, {
+                                from: 1,
+                                to: 1,
+                                color: '#198754',
+                                name: "1"
+                            }]
+                        },
+                        legend: {
+                            align: 'right',
+                            layout: 'vertical',
+                            margin: 0,
+                            verticalAlign: 'top',
+                            y: 25,
+                            enabled: false,
+                        },
+                        series: [{
+                            name: 'Country',
+                            data: result,
+                            borderColor: 'black',
+                            nullColor: 'white',
+                            dataLabels: {
+                                enabled: true,
+                                fontsize: "10px",
+                                // crop: false,
+                                // allowOverlap: true,
+                                // overflow: 'none',
+                                // color: '#FFFFFF',
+                                format: '{point.name}',
+                                // nullFormat: '{point.name}'
+                            },
+                            tooltip: {
+                                enabled: true,
+                                allowOverlap: true,
+                                // headerFormat: '',
+                                // pointFormat: '{point.data}',
+                            }
+                        }],
+                        exporting: {
+                            sourceWidth: 1920,
+                            sourceHeight: 1080,
+                            scale: 3
+                        },
+                    });
+
+                })();
+
+
+            });
+    </script>
+
+
+
+
+</body>
+
+</html>
