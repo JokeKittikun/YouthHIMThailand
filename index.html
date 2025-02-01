@@ -109,7 +109,7 @@
                         cellValue1 = json_data[i].c[0].v;
 
                     }
-                    result.push([cellValue1, json_data[i].c[4].v]);
+                    result.push([cellValue1, json_data[i].c[3].v]);
                 }
 
 
@@ -162,16 +162,31 @@
                             }
                         },
                         colorAxis: {
-                            dataClasses: [{
+                            dataClasses: [
+                            {
                                 from: 0,
                                 to: 0,
                                 color: 'lightgray',
                                 name: "0"
                             }, {
                                 from: 1,
-                                to: 1,
-                                color: '#198754',
-                                name: "1"
+                                to: 30,
+                                color: '#b7efc5',
+                                name: "1 - 30"
+                            }, {
+                                from: 31,
+                                to: 50,
+                                color: '#2dc653',
+                                name: "31 - 50"
+                            }, {
+                                from: 51,
+                                to: 100,
+                                color: '#208b3a',
+                                name: "51 - 100"
+                            }, {
+                                from: 100,
+                                color: '#155d27',
+                                name: "> 100"
                             }]
                         },
                         legend: {
