@@ -158,7 +158,7 @@
                             enableDoubleClickZoomTo: true,
                             buttonOptions: {
                                 verticalAlign: 'top',
-                                align: 'right'
+                                align: 'right',
                             }
                         },
                         colorAxis: {
@@ -190,12 +190,15 @@
                             }]
                         },
                         legend: {
-                            align: 'right',
+                            align: 'center',
                             layout: 'vertical',
                             margin: 0,
                             verticalAlign: 'top',
-                            y: 25,
+                            // y: 25,
                             enabled: true,
+                              itemStyle: {
+                                 fontSize:'24px',
+                              }
                         },
                         series: [{
                             name: 'Country',
@@ -215,6 +218,9 @@
                             tooltip: {
                                 enabled: true,
                                 allowOverlap: true,
+                                style: {
+                                    fontSize:'18px'
+                                }
                                 // headerFormat: '',
                                 // pointFormat: '{point.data}',
                             }
